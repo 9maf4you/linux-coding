@@ -6,17 +6,17 @@
 #include <time.h>
 #include <unistd.h>
 #include <string.h>
+#include <stdlib.h>
 
 
 int main(){
     int pid;
     int fd;
-    char buf;
+    char buf[1024];
     char d;
-    char str[60];
-    
-    pid = getpid();
-    sprintf(&str, "/proc/%u/stat", pid);
-    fd = open(str, 0);
-    d = read(fd, &buf, 1024);
+    fd = open("/proc/self/stat", 0);
+    read(fd, &buf, 1024);
+    //strset for formatinf strings
+
+    puts(buf);
 }
