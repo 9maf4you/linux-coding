@@ -16,7 +16,19 @@ int main(){
     char d;
     fd = open("/proc/self/stat", 0);
     read(fd, &buf, 1024);
-    //strset for formatinf strings
+    
+    char *istr;
+    char sep[10] = " ";
+    istr = strtok(buf, sep);
 
-    puts(buf);
+    int c = 1;
+    while (istr != NULL) {
+        if ( c == 4 ) {
+            printf("the parent pid is: %s\n", istr);
+            break;
+        }
+        istr = strtok(NULL, sep);
+        c++;
+    }
+    
 }
