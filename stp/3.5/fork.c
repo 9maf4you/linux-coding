@@ -1,22 +1,21 @@
-#include <unistd.h>
+#include <sys/wait.h>
 #include <sys/types.h>
-#include <sys/stat.h>
-#include <fcntl.h>
+#include <unistd.h>
 #include <stdio.h>
-#include <time.h>
-#include <string.h>
 #include <stdlib.h>
 
 
-
 int forked() {
-    while (1 == 1) {
-        puts("sleeping...");
-        sleep (1);
-    }
-
+    sleep(7);
 }
 
-int main(){
-    
+
+int main() {
+    pid_t childpid;
+    childpid = fork();
+    if (childpid != -1) {
+        printf("PID is %d \n", childpid);
+        fclose(stdout);
+        forked();
+    }
 }
