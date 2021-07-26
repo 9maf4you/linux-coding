@@ -6,7 +6,7 @@
 
 int zerocount(char zeroes[]) {
     int counter = 0;
-    int zrs;
+    int zrs = 0;
     char zc[1] = {"0"};
     long unsigned int lenarr = strlen(zeroes);
 
@@ -14,7 +14,7 @@ int zerocount(char zeroes[]) {
         //printf("Index Elem %i\n", counter);
         printf("Value Elem %c\n", zeroes[counter]);
         if (zeroes[counter] == zc[0]) {
-            printf("IF\n");
+            printf("IF\n", zrs);
             ++zrs;
         }
     }
