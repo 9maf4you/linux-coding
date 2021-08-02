@@ -3,6 +3,7 @@
 #include <unistd.h>
 #include <string.h>
 #include <stdlib.h>
+#include <fcntl.h>
 
 int zerocount(char zeroes[]) {
     int counter = 0;
@@ -17,17 +18,30 @@ int zerocount(char zeroes[]) {
         }
     }
     printf("Zero at array: %d\n", zrs);
+    return zrs;
 }
 
 void main(int argc, char* argv[]) {
-    printf("argc: %d\n", argc);
-    printf("arg[1]: %s\n", argv[1]);
-    printf("arg[2]: %s\n", argv[2]);
     if (argc < 2) {
         exit(12);
     }  
     
-    execve(argv[2], &argv[3], NULL);
-    zerocount(argv[2]);
-    
+    int pipefd[2];    
+    int iofd = pipe(pipefd);
+
+    if ( fork() == 0 ) {
+        //child
+        dup2(pipefd[0], STDIN_FILENO);
+        char cbuf[] = "";
+        read(STDIN_FILENO, &cbuf, 16);
+        puts(cbuf);
+        //sleep(300);
+    } else {
+        //parent
+        //char pbuf[] = "STDOUT_FILENO";
+        dup2(pipefd[1], STDOUT_FILENO);
+        execl(argv[2], argv[2], NULL);
+        //sleep(300); //write(pipefd[1], pbuf, 16);
+
+    }
 }
