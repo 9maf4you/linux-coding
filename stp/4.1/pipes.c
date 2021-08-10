@@ -17,7 +17,7 @@ int zerocount(char zeroes[]) {
             ++zrs;
         }
     }
-    //printf("Zero at array: %d\n", zrs);
+    printf("Zero at array: %d\n", zrs);
     return zrs;
 }
 
@@ -27,31 +27,29 @@ void main(int argc, char* argv[]) {
     }  
     
     int pipefd[2];    
-    int iofd = pipe(pipefd);
+    pipe(pipefd);
 
     if ( fork() == 0 ) {
         //child
         dup2(pipefd[0], STDIN_FILENO);
-        close(4);
-        close(3);
         char cbuf[] = "";
-        read(STDIN_FILENO, &cbuf, 16);
-        puts("CHILD START");
-        int zc;
-        zc = zerocount(cbuf);
-        printf("CHILD COUNTED: %d\n", zc);
-        puts("CHILD END");
-        sleep(300);
+        int cr = 0;
+        do {
+            cr = read(STDIN_FILENO, &cbuf, 8);
+        }
+        while( cr > 8 );
+        puts("DONE");
+        //zerocount(cbuf);
     } else {
         //parent
-        char pbuf[] = "STDOUT_FILENO";
+        char pbuf[100000] = "";
         dup2(pipefd[1], STDOUT_FILENO);
-        close(4);
-        close(3);
+        //close(STDOUT_FILENO);
         //The command "./pipes.bin sleep 10"
         //shows up: execve("/usr/bin/sleep", ["sleep", "10"], 0x7ffff53580c8 /* 18 vars */) =  0
         //....wierd
         execlp(argv[1], argv[1], argv[2], NULL);
-        write(pipefd[1], pbuf, 16);
+        write(pipefd[1], pbuf, 8);
+        close(STDOUT_FILENO);
     }
 }
