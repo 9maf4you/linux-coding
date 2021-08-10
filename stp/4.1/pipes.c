@@ -37,14 +37,14 @@ void main(int argc, char* argv[]) {
         do {
             cr = read(STDIN_FILENO, &cbuf, 8);
         }
-        while( cr > 8 );
+        while( cr == 8 );
+        //printf("%li",sizeof(cbuf));
         puts("DONE");
         //zerocount(cbuf);
     } else {
         //parent
         char pbuf[100000] = "";
         dup2(pipefd[1], STDOUT_FILENO);
-        //close(STDOUT_FILENO);
         //The command "./pipes.bin sleep 10"
         //shows up: execve("/usr/bin/sleep", ["sleep", "10"], 0x7ffff53580c8 /* 18 vars */) =  0
         //....wierd
