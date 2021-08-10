@@ -17,7 +17,7 @@ int zerocount(char zeroes[]) {
             ++zrs;
         }
     }
-    printf("Zero at array: %d\n", zrs);
+    //printf("Zero at array: %d\n", zrs);
     return zrs;
 }
 
@@ -34,13 +34,13 @@ void main(int argc, char* argv[]) {
         dup2(pipefd[0], STDIN_FILENO);
         char cbuf[] = "";
         int cr = 0;
+        int zc = 0;
         do {
             cr = read(STDIN_FILENO, &cbuf, 8);
+            zc += zerocount(cbuf);
         }
         while( cr == 8 );
-        //printf("%li",sizeof(cbuf));
-        puts("DONE");
-        //zerocount(cbuf);
+        printf("%i\n", zc);
     } else {
         //parent
         char pbuf[100000] = "";
