@@ -7,10 +7,8 @@
 #include <sys/wait.h>
 
 int zerocount(char zeroes[]) {
-    int counter = 0;
-    int zrs = 0;
+    int counter = 0, zrs = 0;
     char zc[1] = {"0"};
-    long unsigned int lenarr = strlen(zeroes);
 
     for (counter; counter < strlen(zeroes); ++counter) {
         //printf("Value Elem %c\n", zeroes[counter]);
@@ -18,7 +16,7 @@ int zerocount(char zeroes[]) {
             ++zrs;
         }
     }
-    printf("Zero at array: %d\n", zrs);
+    //printf("Zero at array: %d\n", zrs);
     return zrs;
 }
 
@@ -36,11 +34,13 @@ void main(int argc, char* argv[]) {
         close(pipefd[1]);
         dup2(pipefd[0], STDIN_FILENO);
 
-        int zc = 0;
+        int c = 0, mid = 0;
+        printf("start c: %d", c);
         while ( read(STDIN_FILENO, &buf, 8) > 0)
-            zc += zerocount(&buf);
-        
-        printf("End: %d\n",zc);
+            mid = zerocount(&buf);
+            printf("while: c=%d mid=%d, sum %d\n",c, mid, c + mid);
+
+        printf("End: %d\n", c);
         close(pipefd[0]);
         close(STDIN_FILENO);
     } else {
