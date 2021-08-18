@@ -35,11 +35,12 @@ void main(int argc, char* argv[]) {
         dup2(pipefd[0], STDIN_FILENO);
 
         int c = 0, mid = 0;
-        printf("start c: %d", c);
-        while ( read(STDIN_FILENO, &buf, 8) > 0)
+        printf("starts: c=%d mid=%d, sum %d\n",c, mid, c + mid);
+        while ( read(STDIN_FILENO, &buf, 8) > 0) {
             mid = zerocount(&buf);
             printf("while: c=%d mid=%d, sum %d\n",c, mid, c + mid);
-
+        }
+            
         printf("End: %d\n", c);
         close(pipefd[0]);
         close(STDIN_FILENO);
