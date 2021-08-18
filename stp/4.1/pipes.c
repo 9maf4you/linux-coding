@@ -40,7 +40,7 @@ void main(int argc, char* argv[]) {
         while ( read(STDIN_FILENO, &buf, 8) > 0)
             zc += zerocount(&buf);
         
-        printf("%i",zc);
+        printf("End: %d\n",zc);
         close(pipefd[0]);
         close(STDIN_FILENO);
     } else {
