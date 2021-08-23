@@ -34,6 +34,12 @@ void main(int argc, char* argv[]) {
         close(pipefd[1]);
         dup2(pipefd[0], STDIN_FILENO);
 
+        // TODO
+        // int c = 0, mid = 0;
+        // if `c` and  `mid` are defined here then output looks like a trash
+        // starts: c=0 mid=0, sum 0
+        // while: c=170930224 mid=4, sum 170930228
+        // End: 170930224
         int c = 0, mid = 0;
         printf("starts: c=%d mid=%d, sum %d\n",c, mid, c + mid);
         while ( read(STDIN_FILENO, &buf, 8) > 0) {
