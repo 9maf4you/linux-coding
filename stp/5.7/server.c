@@ -18,4 +18,6 @@ void main() {
     listen(ss, 1);
     accept(ss, NULL, NULL);
     //sleep(300);
+    // Надо собрать трафик и позыркать почему так curl: (56) Recv failure: Connection reset by peer
+    // 
 }
