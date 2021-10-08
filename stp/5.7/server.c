@@ -6,6 +6,7 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 
 void main() {
@@ -17,12 +18,26 @@ void main() {
     char buf[24];
     char OFF[] = "OFF\r\n";
 
-    bind(ss, (struct sockaddr*)&server, sizeof(server));
+    int br = bind(ss, (struct sockaddr*)&server, sizeof(server));
+    if (br != 0) {
+        puts("CAN'T BIND");
+        exit(1);
+    }
+
     listen(ss, 1);
     int sr = accept(ss, NULL, NULL);
-    while ( strcmp(buf, OFF) ) {
+
+    uint8_t spos = 0;
+    uint8_t endpos = 0;
+    while (1) {
         recv(sr, &buf, 24, 0);
-        puts(buf);
+        if (strncmp("OFF", buf, 3) == 0) {
+            puts("OFF FOUND");
+            exit(0);
+        } else {
+            printf("SEND IT BACK: %s", buf);
+            send(sr, &buf, sizeof(&buf), 0);
+        }
+        sleep(1);
     };
-    close(ss);
 }
