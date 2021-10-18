@@ -24,22 +24,23 @@ void main() {
         exit(1);
     }
 
-    listen(ss, 1);
-    int sr = accept(ss, NULL, NULL);
+    int err = listen(ss, 1);
+    if (err != 0) {
+        puts("CAN'T listen");
+        exit(1);
+    }
+    
 
-    uint8_t spos = 0;
-    uint8_t endpos = 0;
+
     while (1) {
-        if ( recv(sr, &rbuf, sizeof(rbuf), 0) == 0 ){
-            sleep(0.5);
+        int sfque = accept(ss, NULL, NULL);
+        printf("sfque: %d\n", sfque);
+        if ( sfque != -1 ) {
+            do {
+                recv(sfque, &rbuf, sizeof(rbuf), 0);
+                printf("msg: %s\n", rbuf);
+            } while (strncmp("OFF\n", rbuf, 4) != 0);
+            close(sfque);
         };
-        if (strncmp("OFF", rbuf, 3) == 0) {
-            puts("OFF FOUND");
-            close(sr);
-            exit(0);
-        } else {
-            printf("SEND IT BACK: %s", rbuf);
-            send(sr, &rbuf, sizeof(rbuf), MSG_NOSIGNAL);
-        }
-    };
+    }
 }
