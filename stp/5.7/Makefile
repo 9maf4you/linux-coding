@@ -1,4 +1,4 @@
-all: reset
+all: server
 
 server:
 	gcc -static -g ./server-client/server.c -o server.bin

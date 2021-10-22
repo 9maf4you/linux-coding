@@ -29,21 +29,28 @@ void main() {
         puts("CAN'T listen");
         exit(1);
     }
-  /*  
-    while (1) {
-        sleep(1);
-    }
-*/
+
+    int talker(int fd) {
+        char childbuf[128];
+        printf("reading from a client\n");
+        while ( recv(fd, &childbuf, sizeof(childbuf), 0) != 0 ) {
+            printf("msg: %s\n", childbuf);
+        }
+        close(fd);
+        printf("file descriptor %d closed\n", fd);
+        return 0;
+    };
+
 
     while (1) {
-        int sfque = accept(ss, NULL, NULL);
-        printf("sfque: %d\n", sfque);
-        if ( sfque != -1 ) {
-            do {
-                recv(sfque, &rbuf, sizeof(rbuf), 0);
-                printf("msg: %s\n", rbuf);
-            } while (strncmp("OFF\n", rbuf, 4) != 0);
-            close(sfque);
+        int fdc = accept(ss, NULL, NULL);
+        if ( fdc != -1 ) {
+            printf("new connection fd: %d\n", fdc);
+            pid_t pid = fork();
+            if ( pid != 0 ) {
+                puts("New child has been born");
+                talker(fdc);
+            }
         };
     }
 }
