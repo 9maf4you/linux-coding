@@ -17,14 +17,21 @@ void main() {
     char sbuf[] = "";
     char rbuf[128] = "";
     char OFF[] = "OFF\r\n";
+    int backlogsize = 1;
 
+        int foo = 0;
+        printf("%d\n",foo);
+        foo = ++foo;
+        printf("%d\n",foo);
+        foo = 0;
+    
     int br = bind(ss, (struct sockaddr*)&server, sizeof(server));
     if (br != 0) {
         puts("CAN'T BIND");
         exit(1);
     }
 
-    int err = listen(ss, 1);
+    int err = listen(ss, backlogsize);
     if (err != 0) {
         puts("CAN'T listen");
         exit(1);
@@ -42,14 +49,28 @@ void main() {
     };
 
 
+
+
     while (1) {
+        int childs = 0;
         int fdc = accept(ss, NULL, NULL);
+        printf("new connection fd: %d\n", fdc);
         if ( fdc != -1 ) {
-            printf("new connection fd: %d\n", fdc);
+            if ( backlogsize == childs ){
+                puts("too much connection");
+                close(fdc);
+            } else {
+                puts("increase client count");
+                childs = ++childs; 
+                printf("client count: %d\n", childs);
+            }
+
             pid_t pid = fork();
             if ( pid != 0 ) {
-                puts("New child has been born");
+                //puts("New child has been born\n");
                 talker(fdc);
+                childs = --childs; 
+                printf("decriment client count: %d\n", childs);
             }
         };
     }
