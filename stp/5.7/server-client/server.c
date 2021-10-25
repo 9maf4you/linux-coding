@@ -17,14 +17,10 @@ void main() {
     char sbuf[] = "";
     char rbuf[128] = "";
     char OFF[] = "OFF\r\n";
-    int backlogsize = 1;
-
-        int foo = 0;
-        printf("%d\n",foo);
-        foo = ++foo;
-        printf("%d\n",foo);
-        foo = 0;
+    unsigned int backlogsize = 1;
+    unsigned int childs = 0;
     
+
     int br = bind(ss, (struct sockaddr*)&server, sizeof(server));
     if (br != 0) {
         puts("CAN'T BIND");
@@ -52,25 +48,25 @@ void main() {
 
 
     while (1) {
-        int childs = 0;
-        int fdc = accept(ss, NULL, NULL);
+        unsigned int fdc = accept(ss, NULL, NULL);
         printf("new connection fd: %d\n", fdc);
+        printf("backlog: %d, childs: %d\n", backlogsize, childs);
         if ( fdc != -1 ) {
-            if ( backlogsize == childs ){
-                puts("too much connection");
+            if ( backlogsize <= childs ){
+                puts("too much connection\n\n\n");
+                setsockopt(fdc, 1, 0, 0, 0);
                 close(fdc);
             } else {
                 puts("increase client count");
-                childs = ++childs; 
+                childs++; 
                 printf("client count: %d\n", childs);
-            }
 
-            pid_t pid = fork();
-            if ( pid != 0 ) {
-                //puts("New child has been born\n");
-                talker(fdc);
-                childs = --childs; 
-                printf("decriment client count: %d\n", childs);
+                pid_t pid = fork();
+                if ( pid != 0 ) {
+                    talker(fdc);
+                    childs--; 
+                    printf("decriment client count: %d\n", childs);
+                }
             }
         };
     }
