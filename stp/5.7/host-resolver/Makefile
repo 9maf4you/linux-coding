@@ -1,12 +1,8 @@
-all: server
+all: resolver
 
-server:
-	#gcc -static -g ./server-client/server.c -o server.bin
-	echo "server"
+resolver:
+	gcc -g ./resolver.c -o resolver.bin
 	chmod +x *.bin
-
-reset:
-	echo "RESET"
 
 clean: 
 	rm -fr *bin
