@@ -56,3 +56,5 @@ dkms.conf
 # Others
 .vscode/
 .vagrant/
+# from tcpdump
+*.pcap 
